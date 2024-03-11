@@ -47,13 +47,13 @@ To use the MultiCat CLI tool, navigate to the directory where you've installed t
 - Display the contents of all text files in the current directory and its subdirectories:
 
   ```bash
-  python multicat.py
+  python multicat.py .
   ```
 
-- Display the contents of all text files within a specific directory and its subdirectories:
+- Display the contents of all text files within a specific directory and its subdirectories, and another text file:
 
   ```bash
-  python multicat.py /path/to/directory
+  python multicat.py /path/to/directory textfile.txt
   ```
 
 - Display the contents of all files in the current directory and its subdirectories, and copy the output to the clipboard:

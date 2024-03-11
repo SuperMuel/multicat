@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 
-from typing import Iterable, Optional
+from typing import Iterable, List, Optional
 import typer
 from pathlib import Path
 import pyperclip
@@ -87,8 +87,9 @@ def format_file_contents(file_path: Path, contents: str) -> str:
 
 @app.command()
 def main(
-    directory: str = typer.Argument(
-        ".", help="The directory to search for text files."
+    paths: List[str] = typer.Argument(
+        help="The directories or files to search for text files.",
+        exists=True,
     ),
     copy: bool = typer.Option(False, "--copy", "-c"),
     max_depth: Optional[int] = typer.Option(
@@ -96,19 +97,23 @@ def main(
     ),
 ):
     """Concatenate the contents of all text files in a directory."""
-    path = Path(directory)
+    all_text_files = []
+    for path_str in paths:
+        path = Path(path_str)
+        if not path.exists():
+            typer.echo(f"Path does not exist: {path}", err=True)
+            continue
+        if path.is_file():
+            all_text_files.append(path)
+        else:
+            all_text_files.extend(list_text_files(path, max_depth))
 
-    text_files = [
-        file for file in list_text_files(path, max_depth) if is_text_file(file)
-    ]
-
-    if not text_files:
-        typer.echo(f"No text files found in {path}")
+    if not all_text_files:
+        typer.echo("No text files found.")
         raise typer.Exit(code=0)
 
     contents = {}
-
-    for file in text_files:
+    for file in all_text_files:
         try:
             contents[file] = read_file_contents(file)
         except Exception as e:
@@ -117,10 +122,9 @@ def main(
 
     formatted_contents = [
         format_file_contents(file, contents[file])
-        for file in text_files
+        for file in all_text_files
         if contents[file]
     ]
-
     concatenated_contents = "\n".join(formatted_contents)
 
     if copy:
