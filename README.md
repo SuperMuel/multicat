@@ -1,3 +1,7 @@
+> [!NOTE]
+> Forget this and just use [Code2Prompt](https://github.com/mufeedvh/code2prompt)
+
+
 # MultiCat CLI Tool
 
 The MultiCat CLI tool is a command-line utility designed to concatenate and display the contents of text files within a specified directory and its subdirectories. It also offers an option to copy the concatenated output to the clipboard, making it easier to paste into other applications. Particularly helpful when you need to provide context from multiple files in a chatbot conversation.
